@@ -38,20 +38,24 @@ static void Menu(string archivo)
         if (isNumber && choice <= 4)
         {
             Console.WriteLine($"Has elegido la opción: {choice}");
-            if (choice == 1)
+            switch (choice)
             {
-                AddGasto(archivo);
-            }
-            else if (choice == 2)
-            {
-                CheckGasto(archivo);
-            }
-            else if (choice == 3)
-            {}
-            else
-            {                
-                Console.WriteLine("Saliendo...");
-                salir = true;
+                case 1:
+                    AddGasto(archivo);
+                    break;
+                case 2:
+                    CheckGasto(archivo);
+                    break;
+                case 3:
+                    // TODO: Balance total
+                    break;
+                case 4:
+                    Console.WriteLine("Saliendo...");
+                    salir = true;
+                    break;
+                default:
+                    Console.WriteLine("Opción no válida.");
+                    break;
             }
 
         }
