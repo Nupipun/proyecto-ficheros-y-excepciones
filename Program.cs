@@ -1,7 +1,4 @@
-﻿// 8===========D
-// (.)(.)
-
-// Menú
+﻿// Menú
 // Añadir nuevo gasto
 //Descripción, categoría, importe en €, guardar en archivo gastos.csv
 // Consultar gastos
@@ -14,7 +11,17 @@
 // try/catch
 // Validar entrada
 
+//TODO: Cambiar listas a arrays con los siguientes nombres
+//TODO: Parsear el .csv como un array BIDIMENSIONAL en vez de como una lista.
+//{
+//  FECHA_HORA: (fecha)
+//  CATEGORIA: (cat)
+//  DESCRIPCION: (desc)
+//  IMPORTE: (imp)
+//}
+
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 
 string csvPath = "gastos.csv";
@@ -48,6 +55,7 @@ static void Menu(string archivo)
                     break;
                 case 3:
                     // TODO: Balance total
+                    BalanceTotal(archivo);
                     break;
                 case 4:
                     Console.WriteLine("Saliendo...");
@@ -99,7 +107,55 @@ catch (FileNotFoundException)
 
 }
 
+static string[,] LeerCsv(string archivo)
+{
+    string readText;
+    int filas = 4;
+
+    readText = File.ReadAllText(archivo);
+ 
+    Console.WriteLine("Tus gastos son los siguientes: ");
+    //var csvalues = new List<string>(readText.Split("\n"));
+    List<string> csValues = new List<string>(readText.Split("\n"));
+    csValues.Remove("");
+    List<string> formattedCsValues = new List<string>();
+    string[,] csValuesArray = new string[csValues.Count(), filas];
+    // Iteramos sobre cada entrada del .csv
+    for (int i = 0; i < csValues.Count; i++)
+    {
+        string value = csValues[i];
+        formattedCsValues.AddRange(value.Split("|"));
+        for (int v = 0; v < 4; v++)
+        {
+            csValuesArray[i, v] = formattedCsValues[0];
+            formattedCsValues.RemoveAt(0);
+        }
+    }
+    return csValuesArray;
+
+
+}
+
 static void CheckGasto(string archivo)
+{
+
+    string[,] valor;
+
+    try
+    {
+        valor = LeerCsv(archivo);
+    }
+    catch (FileNotFoundException)
+    {
+        Console.WriteLine("No se encontró un archivo csv. Añade un gasto primero.");
+        return;
+    }
+
+    Console.WriteLine($"Fecha: {valor[0, 0]} Descripción: {valor[0, 1]}, Categoría: {valor[0, 2]}, Importe: {valor[0, 3]}");
+
+}
+
+static void BalanceTotal(string archivo)
 {
     string readText;
 
@@ -112,13 +168,13 @@ static void CheckGasto(string archivo)
         Console.WriteLine("No se encontró ningún archivo. Empieza añadiendo un nuevo gasto.");
         return;
     }
-
-    Console.WriteLine("Tus gastos son los siguientes: ");
     var csvalues = new List<string>(readText.Split("\n"));
+    var eachvalues = new List<string>();
     foreach (var value in csvalues)
     {
-        var newValue = value.Replace("|", " ");
-        Console.WriteLine(newValue);
+       // eachvalues.Append(value.Split("|"));
     }
+    Console.WriteLine(eachvalues);
 
+    
 }
