@@ -20,6 +20,7 @@
 //  IMPORTE: (imp)
 //}
 
+using System.Collections;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
@@ -151,7 +152,31 @@ static void CheckGasto(string archivo)
         return;
     }
 
-    Console.WriteLine($"Fecha: {valor[0, 0]} Descripción: {valor[0, 1]}, Categoría: {valor[0, 2]}, Importe: {valor[0, 3]}");
+    for (int f = 0; f < valor.GetLength(0); f++)
+    {
+        for (int c = 0; c < valor.GetLength(1); c++)
+        {
+            switch (c)
+            {
+                case 0:
+                    Console.Write($"| Fecha: {valor[f, c]} ");
+                    break;
+                case 1:
+                    Console.Write($"| Descripción: {valor[f, c]} ");
+                    break;
+                case 2:
+                    Console.Write($"| Categoría: {valor[f, c]} ");
+                    break;
+                case 3:
+                    Console.Write($"| Importe: {valor[f, c]} ");
+                    break;
+            }
+
+
+        }
+        Console.WriteLine();
+    }
+    //Console.WriteLine($"Fecha: {valor[0, 0]} Descripción: {valor[0, 1]}, Categoría: {valor[0, 2]}, Importe: {valor[0, 3]}");
 
 }
 
