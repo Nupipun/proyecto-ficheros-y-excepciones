@@ -1,26 +1,4 @@
-﻿// Menú
-// Añadir nuevo gasto
-//Descripción, categoría, importe en €, guardar en archivo gastos.csv
-// Consultar gastos
-//Leer gastos.csv
-// Balance total
-//Procesar gastos.csv
-// Salir
-
-// Formato archivo ".csv"
-// try/catch
-// Validar entrada
-
-//TODO: Cambiar listas a arrays con los siguientes nombres
-//TODO: Parsear el .csv como un array BIDIMENSIONAL en vez de como una lista.
-//{
-//  FECHA_HORA: (fecha)
-//  CATEGORIA: (cat)
-//  DESCRIPCION: (desc)
-//  IMPORTE: (imp)
-//}
-
-using System.Collections;
+﻿using System.Collections;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
@@ -98,9 +76,19 @@ catch (FileNotFoundException)
 
     Console.WriteLine("Introduce la categoría del gasto: ");
     string categoria = Console.ReadLine() ?? string.Empty;
+    if (string.IsNullOrEmpty(categoria) || string.IsNullOrEmpty(gastoDesc))
+    {
+        Console.WriteLine($"Hay algunos campos en blanco. Intentalo de nuevo.");
+        return;
+    }
 
     Console.WriteLine("Introduce el importe en euros (€): ");
-    string importe = Console.ReadLine() ?? string.Empty;
+    bool isNumber = int.TryParse(Console.ReadLine(), out int importe);
+    if (!isNumber)
+    {
+        Console.WriteLine("Introduce un número válido.");
+        return;
+    }
 
     string data = $"{now}|{gastoDesc}|{categoria}|{importe}\n";
 
@@ -182,24 +170,25 @@ static void CheckGasto(string archivo)
 
 static void BalanceTotal(string archivo)
 {
-    string readText;
+    string[,] csv;
+    int cImporte = 3;
+    int resultado = 0;
+
 
     try
     {
-        readText = File.ReadAllText(archivo);
+        csv = LeerCsv(archivo);
     }
     catch (FileNotFoundException)
     {
-        Console.WriteLine("No se encontró ningún archivo. Empieza añadiendo un nuevo gasto.");
+        Console.WriteLine("No se encontró un archivo csv. Añade un gasto primero.");
         return;
     }
-    var csvalues = new List<string>(readText.Split("\n"));
-    var eachvalues = new List<string>();
-    foreach (var value in csvalues)
+    for (int f = 0; f < csv.GetLength(0); f++)
     {
-       // eachvalues.Append(value.Split("|"));
+        int importeObtenido = int.Parse(csv[f, cImporte]);
+        resultado += importeObtenido;
     }
-    Console.WriteLine(eachvalues);
-
+    Console.WriteLine($"Tu balance total es de: {resultado}");
     
 }
